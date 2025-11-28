@@ -6,7 +6,7 @@ from collections import Counter
 from pathlib import Path
 from wordcloud import WordCloud, STOPWORDS
 
-def generate_wordcloud(df, text_columns=["Title"], min_freq=5):
+def generate_wordcloud(df, text_columns, min_freq=5):
     """
     Generate and display a word cloud from specified text columns in a DataFrame.
     No stemming. Words appear exactly as written (after cleaning).
@@ -45,9 +45,9 @@ def generate_wordcloud(df, text_columns=["Title"], min_freq=5):
     plt.figure(figsize=(12, 6))
     plt.imshow(wc, interpolation="bilinear")
     plt.axis("off")
-    plt.title("Word Cloud of Reddit Video Descriptions", fontsize=18)
-    plt.savefig("reddit_wordcloud.png")
-    print("Saved word cloud as reddit_wordcloud.png")
+    plt.title("Word Cloud of TikTok Video Descriptions", fontsize=18)
+    plt.savefig("tiktok_wordcloud.png")
+    print("Saved word cloud as tiktok_wordcloud.png")
 
 # Run, make sure to put all csv's in /data and this will generate
 folder_path = Path('./data').glob('*')
@@ -62,4 +62,6 @@ for csv in folder_path:
     # Append all rows from other CSV's into the main df excluding the header column labels (set above)
     main_df = pd.concat([main_df, old_df.iloc[1:]], ignore_index=True)
 
-generate_wordcloud(main_df)
+# If the header columns are for some reason different from what you sent me then change the column it 
+# Makes the wordcloud from
+generate_wordcloud(main_df, text_columns=["Description"])
