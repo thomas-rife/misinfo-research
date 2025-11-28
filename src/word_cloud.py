@@ -1,8 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud, STOPWORDS
 import re
+
 from collections import Counter
+from pathlib import Path
+from wordcloud import WordCloud, STOPWORDS
 
 def generate_wordcloud(df, text_columns=["Title"], min_freq=5):
     """
@@ -47,6 +49,17 @@ def generate_wordcloud(df, text_columns=["Title"], min_freq=5):
     plt.savefig("reddit_wordcloud.png")
     print("Saved word cloud as reddit_wordcloud.png")
 
-# Run
-df = pd.read_csv("./data/Reddit_Final.csv")
-generate_wordcloud(df)
+# Run, make sure to put all csv's in /data and this will generate
+folder_path = Path('./data').glob('*')
+
+# Make columns of main df the same as the first csv so we can match
+cols = pd.read_csv("./data/tiktok_AlkalineDiet_20250215.csv", nrows=0).columns
+main_df = pd.DataFrame(columns=cols)
+
+for csv in folder_path:
+    old_df = pd.read_csv(csv)
+
+    # Append all rows from other CSV's into the main df excluding the header column labels (set above)
+    main_df = pd.concat([main_df, old_df.iloc[1:]], ignore_index=True)
+
+generate_wordcloud(main_df)
